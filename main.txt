@@ -1,0 +1,288 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <windows.h>
+#define MAX_ALBUMS 5
+#define MAX_ALBUM_NAME 50
+#define MAX_DIMENSION 500
+struct album{
+    char numeAlbum[50];
+    char dimensiune[500];
+}album[50];
+
+void menu()
+{
+    while(1==1){
+    int position=1;
+    int keyPressed=0;
+
+    #define MAX 6
+    #define MIN 1
+
+    while(keyPressed !=13 )
+    {
+
+    system("cls");
+    arrowHere(1,position); printf("Create a new album\n");
+    arrowHere(2,position); printf("View existing albums\n");
+    arrowHere(3,position); printf("View the total size of an album\n");
+    arrowHere(4,position); printf("Edit one of the albums\n");
+    arrowHere(5,position); printf("Delete one of the albums\n");
+    arrowHere(6,position); printf("Leave the photo gallery\n");
+
+    keyPressed=getch();
+    if(keyPressed==80 && position !=MAX)
+    {
+        position++;
+    }
+    else if(keyPressed==72 && position!=MIN)
+    {
+        position--;
+    }
+    else
+    {
+        position=position;
+    }}
+
+
+
+
+
+    FILE* fp = fopen("album.txt", "r");
+    int nrAlbume=5;
+    fgetc(fp);
+    for (int i = 1; i <= nrAlbume; ++i) {
+        fgets(album[i].numeAlbum, 50, fp);
+        fgets(album[i].dimensiune,500,fp);
+    }
+     fclose(fp);
+    system("cls");
+
+
+
+
+
+
+    if(position==1){
+
+        FILE* fp = fopen("album.txt", "a");
+        if (fp == NULL) {
+                printf("Failed to open the file.\n");
+                return 1;
+            }
+
+        char s[30];
+        int dim;
+
+        printf("Enter the name of the new album: ");
+        scanf("%s", s);
+        printf("Enter the dimension of the new album: ");
+        scanf("%d", &dim);
+        printf("The album '%s' was created successfully.\n", s);
+        fprintf(fp, "%s", s);
+        fprintf(fp, "\n-%dphotos\n", dim);
+
+        fclose(fp);
+        system("pause");
+             }
+
+
+
+
+
+
+    else if(position==2){
+             FILE* fp = fopen("album.txt", "r");
+            if (fp == NULL) {
+                printf("Failed to open the file.\n");
+                return 1;
+                }
+
+            char buffer[500];
+            while (fgets(buffer, sizeof(buffer), fp) != NULL) {
+                    printf("%s", buffer);
+                    }
+                printf("\n");
+                fclose(fp);
+                system("pause");}
+
+
+
+
+
+
+    else if(position ==3){
+
+            FILE* fp = fopen("album.txt", "r");
+            int nrAlbume=5;
+            fgetc(fp);
+            for (int i = 1; i <= nrAlbume; ++i) {
+                fgets(album[i].numeAlbum, 50, fp);
+                fgets(album[i].dimensiune,500,fp);
+            }
+            fclose(fp);
+            int s;
+            do{
+                printf("Choose the number of the album whose size you want to view: ");
+                scanf("%d", &s);
+              }while(s<1 || s>nrAlbume);
+
+            for(int i=1; i<= nrAlbume; ++i){
+                if(s==i)
+                    printf(album[i].dimensiune, 500, fp);
+            }
+            system("pause");}
+
+
+
+
+
+
+    else if(position==4) {
+
+            FILE* fp = fopen("album.txt", "r+");
+    if (fp == NULL) {
+        printf("Failed to open the file.\n");
+        return 1;
+    }
+
+    int nrAlbume = MAX_ALBUMS;
+
+    album[MAX_ALBUMS];
+
+    for (int i = 0; i < nrAlbume; ++i) {
+        if (fgets(album[i].numeAlbum, MAX_ALBUM_NAME, fp) == NULL) {
+            printf("Failed to read album name from file.\n");
+            fclose(fp);
+            return 1;
+        }
+        if (fgets(album[i].dimensiune, MAX_DIMENSION, fp) == NULL) {
+            printf("Failed to read album dimension from file.\n");
+            fclose(fp);
+            return 1;
+        }
+        album[i].numeAlbum[strcspn(album[i].numeAlbum, "\n")] = '\0';
+        album[i].dimensiune[strcspn(album[i].dimensiune, "\n")] = '\0';
+    }
+
+    char albumToEdit[MAX_ALBUM_NAME];
+    printf("Enter the name of the album to edit: ");
+    if (scanf("%s", albumToEdit) != 1) {
+        printf("Failed to read input. Please enter a valid album name.\n");
+        fclose(fp);
+        return 1;
+    }
+
+    int found = 0;
+    for (int i = 0; i < nrAlbume; ++i) {
+        if (strcmp(album[i].numeAlbum, albumToEdit) == 0) {
+            printf("Enter the new name for the album: ");
+            if (scanf("%s", album[i].numeAlbum) != 1) {
+                printf("Failed to read input. Please enter a valid album name.\n");
+                fclose(fp);
+                return 1;
+            }
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Album not found.\n");
+    } else {
+        rewind(fp);
+        for (int i = 0; i < nrAlbume; ++i) {
+            fprintf(fp, "%s\n%s\n", album[i].numeAlbum, album[i].dimensiune);
+        }
+        printf("Album name updated successfully.\n");
+    }
+
+    fclose(fp);
+        system("pause");
+    }
+
+
+
+
+
+    else if(position==5) {FILE* fp = fopen("album.txt", "r+");
+    if (fp == NULL) {
+        printf("Failed to open the file.\n");
+        return 1;
+    }
+
+    int nrAlbume = 5;
+    struct album album[5];
+
+    for (int i = 0; i < nrAlbume; ++i) {
+        fgets(album[i].numeAlbum, sizeof(album[i].numeAlbum), fp);
+        fgets(album[i].dimensiune, sizeof(album[i].dimensiune), fp);
+        album[i].numeAlbum[strcspn(album[i].numeAlbum, "\n")] = '\0';
+        album[i].dimensiune[strcspn(album[i].dimensiune, "\n")] = '\0';
+    }
+
+    int s;
+    do {
+        printf("Choose the number of the album you want to delete: ");
+        if (scanf("%d", &s) != 1) { // Check scanf return value
+            printf("Failed to read input. Please enter a valid number.\n");
+            fclose(fp);
+            return 1;
+        }
+    } while (s < 1 || s > nrAlbume);
+
+    printf("Album to delete: %s\n", album[s - 1].numeAlbum);
+
+    for (int i = s - 1; i < nrAlbume - 1; ++i) {
+        strcpy(album[i].numeAlbum, album[i + 1].numeAlbum);
+        strcpy(album[i].dimensiune, album[i + 1].dimensiune);
+    }
+
+
+    --nrAlbume;
+    fclose(fp);
+    fp = fopen("album.txt", "w");
+    if (fp == NULL) {
+        printf("Failed to open the file.\n");
+        return 1;
+    }
+
+    for (int i = 0; i < nrAlbume; ++i) {
+        fprintf(fp, "%s\n%s\n", album[i].numeAlbum, album[i].dimensiune);
+    }
+
+    printf("Album deleted successfully.\n");
+
+    fclose(fp);
+
+        system("pause");}
+
+
+
+
+    else if(position==6) {return 0;}
+
+    getch();
+    }
+}
+
+
+
+void arrowHere(int realPosition, int arrowPosition)
+{
+    if(realPosition==arrowPosition)
+    {
+        printf(" ------>>> ");
+    }
+    else
+    {
+        printf("           ");
+    }
+}
+
+int main()
+{
+    menu();
+    return 0;
+}
